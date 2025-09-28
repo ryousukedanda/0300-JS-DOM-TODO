@@ -1,0 +1,7 @@
+@use "../shared/_variable.sass"
+
+@mixin border($side: null)
+  @if $side == null 
+    border: 1px solid variable.$border-color
+  @else
+    border-#{$side}: 1px solid variable.$border-color

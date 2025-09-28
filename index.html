@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Todo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="stylesheets/style.css" />
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <script
+      src="https://kit.fontawesome.com/51423ebba7.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body class="body">
+    <main>
+      <div>
+        <div class="main__container">
+          <!-- main-header -->
+          <div class="main__header">
+            <h1 class="main__header-title">Todo</h1>
+          </div>
+          <!-- main-body -->
+          <div class="main__body">
+            <!-- form -->
+            <form class="form js-form">
+              <!-- input-group -->
+              <div class="form__input-group">
+                <div class="form__input form__input--name">
+                  <label class="form__input-label"> タスク </label>
+                  <input
+                    type="text"
+                    name="name"
+                    class="form__input-field"
+                    placeholder="タスク名を入力"
+                  />
+                </div>
+                <div class="form__input">
+                  <label class="form__input-label">期限日</label>
+                  <input
+                    type="date"
+                    name="deadline"
+                    class="form__input-field"
+                    placeholder="期限日を入力"
+                  />
+                </div>
+              </div>
+              <!-- input-footer -->
+              <div class="form__input-footer">
+                <button class="button button--primary">追加</button>
+              </div>
+            </form>
+            <!-- list -->
+            <div class="list">
+              <!-- 完了ボタン -->
+              <div class="list__setting">
+                <label class="list__setting-label">
+                  <input
+                    type="checkbox"
+                    class="list__setting-input js-show-completed"
+                  />
+                  完了タスクを表示
+                </label>
+              </div>
+              <!-- list-header -->
+              <div class="list__header">
+                <div class="list__header-item">&nbsp;</div>
+                <div class="list__header-item list__header-item--name">
+                  タスク
+                </div>
+                <div class="list__header-item">期限日</div>
+                <div class="list__header-item">&nbsp;</div>
+              </div>
+              <!-- list-container -->
+              <div class="list__container js-list-container"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="js/lib.js"></script>
+    <script src="js/function.js"></script>
+  </body>
+</html>
