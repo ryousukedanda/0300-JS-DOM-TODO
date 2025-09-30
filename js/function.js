@@ -45,12 +45,34 @@ function createTaskElement(task) {
   // name
   const colName = div('list__item-col list__item-col--name');
   colName.textContent = task.name;
+  const InputEditName = document.createElement('input');
+  const nameBeforeEdit = task.name;
   divListItem.appendChild(colName);
+
+  //タスク名編集
+  attachEditNameEventLister(colName, InputEditName, task);
+  attachCompleteEditNameEventLister(
+    colName,
+    InputEditName,
+    task,
+    nameBeforeEdit
+  );
 
   // deadline
   const colDeadline = div('list__item-col list__item-col--deadline');
   colDeadline.textContent = task.deadline.toString();
+  const InputEditDeadline = document.createElement('input');
+  const deadlineBeforeEdit = task.deadline.toString();
   divListItem.appendChild(colDeadline);
+
+  //日付編集
+  attachEditDeadlineEventLister(colDeadline, InputEditDeadline, task);
+  attachCompleteEditDeadlineEventLister(
+    colDeadline,
+    InputEditDeadline,
+    task,
+    deadlineBeforeEdit
+  );
 
   // trash
   const colTrash = div('list__item-col list__item-col--actions');
@@ -76,7 +98,79 @@ function renderTasks(container) {
   });
 }
 
-// イベントハンドラー(checkbox)
+//イベントハンドラー(タスク名編集)
+function attachEditNameEventLister(colName, InputEditName, task) {
+  colName.addEventListener('click', () => {
+    colName.textContent = '';
+
+    InputEditName.setAttribute('type', 'text');
+    InputEditName.setAttribute('value', task.name);
+    InputEditName.classList.add('form__input-field');
+    colName.appendChild(InputEditName);
+
+    InputEditName.focus();
+    const length = InputEditName.value.length;
+    InputEditName.setSelectionRange(length, length);
+    InputEditName.addEventListener('change', (e) => {
+      task.name = e.target.value;
+    });
+  });
+}
+
+//イベントハンドラー(タスク名編集完了)
+function attachCompleteEditNameEventLister(
+  colName,
+  InputEditName,
+  task,
+  nameBeforeEdit
+) {
+  InputEditName.addEventListener('blur', (e) => {
+    InputEditName.remove();
+    if (e.target.value === '') {
+      colName.textContent = nameBeforeEdit;
+      task.name = nameBeforeEdit;
+      return;
+    }
+
+    colName.textContent = task.name;
+  });
+}
+
+//イベントハンドラー(日付編集)
+function attachEditDeadlineEventLister(colDeadline, InputEditDeadline, task) {
+  colDeadline.addEventListener('click', () => {
+    colDeadline.textContent = '';
+
+    InputEditDeadline.setAttribute('type', 'date');
+    InputEditDeadline.classList.add('form__input-field');
+    colDeadline.appendChild(InputEditDeadline);
+
+    InputEditDeadline.focus();
+    InputEditDeadline.addEventListener('change', (e) => {
+      task.deadline = AppDate.parse(e.target.value);
+    });
+  });
+}
+
+//イベントハンドラ-(日付編集完了)
+function attachCompleteEditDeadlineEventLister(
+  colDeadline,
+  InputEditDeadline,
+  task,
+  deadlineBeforeEdit
+) {
+  InputEditDeadline.addEventListener('blur', (e) => {
+    InputEditDeadline.remove();
+    if (e.target.value === '') {
+      colDeadline.textContent = deadlineBeforeEdit;
+      task.deadline = AppDate.parse(deadlineBeforeEdit);
+      return;
+    }
+    colDeadline.textContent = e.target.value;
+  });
+}
+
+// イベントハンドラー(タスク完了)
 function createTaskCompleteHandler(task, li, divListItem) {
   return (checked) => {
     task.checked = checked;
@@ -87,7 +181,7 @@ function createTaskCompleteHandler(task, li, divListItem) {
   };
 }
 
-//イベントハンドラー(trash)
+//イベントハンドラー(タスク削除)
 function createTaskTrashHandler(task, li) {
   return () => {
     if (confirm('このタスクを削除しますか?')) {
@@ -99,9 +193,12 @@ function createTaskTrashHandler(task, li) {
 }
 
 //イベントハンドラー(新規タスク登録)
-function onSubmitTask(container, e) {
-  let taskName = e.target[0].value;
-  let deadline = e.target[1].value;
+function onSubmitTask(container) {
+  const inputText = document.querySelector('input[type=text]');
+  const inputDate = document.querySelector('input[type=date]');
+
+  let taskName = inputText.value;
+  let deadline = inputDate.value;
 
   //タスク名か日付が空ならalertを出す
   if (taskName === '') {
@@ -115,8 +212,8 @@ function onSubmitTask(container, e) {
 
   //stateオブジェクトにタスク追加
   state.tasks.push({
-    name: e.target[0].value,
-    deadline: AppDate.parse(e.target[1].value),
+    name: taskName,
+    deadline: AppDate.parse(deadline),
     checked: false,
   });
 
@@ -129,7 +226,8 @@ function onSubmitTask(container, e) {
   renderTasks(container);
 
   //タスク追加後、フォームの入力値をリセット
-  e.target.reset();
+  const form = document.querySelector('.form');
+  form.reset();
 }
 
 // ↑↑↑
@@ -140,7 +238,7 @@ function main() {
   //イベント処理(新規タスク登録)
   document.querySelector('.js-form').addEventListener('submit', (e) => {
     e.preventDefault();
-    onSubmitTask(todoContainer, e);
+    onSubmitTask(todoContainer);
   });
 
   //イベント処理(完了タスク表示ボタン)
