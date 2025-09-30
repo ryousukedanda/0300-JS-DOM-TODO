@@ -146,6 +146,8 @@ function attachEditDeadlineEventLister(colDeadline, InputEditDeadline, task) {
     colDeadline.appendChild(InputEditDeadline);
 
     InputEditDeadline.focus();
+    InputEditDeadline.showPicker();
+
     InputEditDeadline.addEventListener('change', (e) => {
       task.deadline = AppDate.parse(e.target.value);
     });
